@@ -8,12 +8,14 @@
         <strong>{{ author }}:</strong>
         {{ comment.text }}
       </p>
-      <p>{{ comment.created_at }}</p>
+      <p class="comment__body--date">{{ comment.created_at | fromNow }}</p>
     </div>
   </article>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   props: {
     comment: Object,
@@ -21,6 +23,11 @@ export default {
   computed: {
     author() {
       return `${this.comment.first_name} ${this.comment.last_name}`;
+    },
+  },
+  filters: {
+    fromNow(date) {
+      return moment(date).fromNow();
     },
   },
 };
@@ -51,6 +58,10 @@ export default {
 
     P {
       margin: 0 0 1rem 0;
+    }
+
+    &--date {
+      color: gray;
     }
   }
 }
