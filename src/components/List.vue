@@ -1,16 +1,25 @@
 <template>
   <section class="section__list">
     <Loader v-if="!loaded" />
-    <template v-else>
-      <div v-for="comment in list" :key="comment.id">
-        {{ comment }}
-      </div>
+    <template
+      v-else
+      v-for="comment in list"
+    >
+      <Comment
+        :key="comment.id"
+        :comment="comment"
+       />
     </template>
   </section>
 </template>
 
 <script>
+import Comment from './Comment.vue';
+
 export default {
+  components: {
+    Comment,
+  },
   data: () => ({
     loaded: false,
     list: [],
@@ -33,7 +42,6 @@ export default {
   &__list {
     background: white;
     margin: 5rem 0;
-    padding: 2rem;
   }
 }
 </style>
