@@ -10,14 +10,17 @@
         :comment="comment"
        />
     </template>
+    <AddComment @add="add" />
   </section>
 </template>
 
 <script>
+import AddComment from './AddComment.vue';
 import Comment from './Comment.vue';
 
 export default {
   components: {
+    AddComment,
     Comment,
   },
   data: () => ({
@@ -29,6 +32,9 @@ export default {
       const res = await fetch('https://my-json-server.typicode.com/zaszczyk/demo/comments');
       this.list = await res.json();
       this.loaded = true;
+    },
+    add(comment) {
+      console.log(comment);
     },
   },
   mounted() {
