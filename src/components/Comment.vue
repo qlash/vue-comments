@@ -5,8 +5,8 @@
     </div>
     <div class="comment__body">
       <p>
-        <strong>{{ author }}:</strong>
-        {{ comment.text }}
+        <strong>{{ author }}: </strong>
+        <span v-html="userAt(comment.text)" />
       </p>
       <p class="comment__body--date">{{ comment.created_at | fromNow }}</p>
     </div>
@@ -15,12 +15,14 @@
 
 <script>
 import moment from 'moment';
+import { mapState } from 'vuex';
 
 export default {
   props: {
     comment: Object,
   },
   computed: {
+    ...mapState('Users', ['list']),
     author() {
       return `${this.comment.first_name} ${this.comment.last_name}`;
     },
@@ -31,6 +33,19 @@ export default {
   filters: {
     fromNow(date) {
       return moment(date).fromNow();
+    },
+  },
+  methods: {
+    userAt(text) {
+      if (!this.list.length) return text;
+      let replaced = text;
+      this.list.forEach((user) => {
+        replaced = replaced.replace(
+          `@${user.first_name} ${user.last_name}`,
+          `<a href="#">${user.first_name} ${user.last_name}</a>`,
+        );
+      });
+      return replaced;
     },
   },
   created() {
