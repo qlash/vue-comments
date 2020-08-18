@@ -5,12 +5,24 @@
         class="comment-add__avatar"
         :src="current.avatar"
       />
-      <textarea
-        v-model.trim="comment"
-        :disabled="loading"
-        class="comment-add__body"
-        placeholder="Add a comment"
-      />
+      <div class="comment-add__body">
+        <textarea
+          ref="comment"
+          v-model.trim="comment"
+          :disabled="loading"
+          placeholder="Add a comment"
+        />
+        <hr/>
+        <div>
+          <span
+            v-for="icon in emoji"
+            :key="icon"
+            @click="addEmoji(icon)"
+            >
+              {{ icon }}
+            </span>
+        </div>
+      </div>
       <button
         :disabled="loading"
         class="comment-add__btn"
@@ -28,12 +40,20 @@ import { mapState } from 'vuex';
 export default {
   data: () => ({
     loading: false,
+    emoji: ['😀', '😃', '😄', '😁', '😆', '😅'],
     comment: '',
   }),
   computed: {
     ...mapState('Users', ['current']),
   },
   methods: {
+    addEmoji(icon) {
+      const startPos = this.$refs.comment.selectionStart;
+      const endPos = this.$refs.comment.selectionEnd;
+      this.comment = this.comment.substring(0, startPos)
+       + icon
+       + this.comment.substring(endPos, this.comment.length);
+    },
     async add() {
       if (this.comment) {
         this.loading = true;
@@ -53,7 +73,7 @@ export default {
 
   &__avatar {
     max-width: 50px;
-    height: auto;
+    height: 50px;
     border-radius: 50%;
     overflow: hidden;
   }
@@ -61,13 +81,17 @@ export default {
   &__body {
     margin: 0 .5rem;
     flex: 1 1 auto;
-    border: 0;
-    outline: 0;
-    resize: none;
 
-    &:focus {
+    textarea {
+      width: 100%;
       border: 0;
       outline: 0;
+      resize: none;
+
+      &:focus {
+        border: 0;
+        outline: 0;
+      }
     }
   }
 
