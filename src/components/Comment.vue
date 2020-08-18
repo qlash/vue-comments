@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     userAt(text) {
-      if (!this.list.length) return text;
+      if (!this.list || this.list.length) return text;
       let replaced = text;
       this.list.forEach((user) => {
         replaced = replaced.replace(
