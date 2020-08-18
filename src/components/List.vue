@@ -1,6 +1,6 @@
 <template>
   <section class="section__list">
-    <Loader v-if="!loaded" />
+    <Loader v-if="!list" />
     <template
       v-else
       v-for="comment in list"
@@ -10,11 +10,12 @@
         :comment="comment"
        />
     </template>
-    <AddComment @add="add" />
+    <AddComment />
   </section>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import AddComment from './AddComment.vue';
 import Comment from './Comment.vue';
 
@@ -23,22 +24,11 @@ export default {
     AddComment,
     Comment,
   },
-  data: () => ({
-    loaded: false,
-    list: [],
-  }),
-  methods: {
-    async get() {
-      const res = await fetch('https://my-json-server.typicode.com/zaszczyk/demo/comments');
-      this.list = await res.json();
-      this.loaded = true;
-    },
-    add(comment) {
-      console.log(comment);
-    },
+  computed: {
+    ...mapState('Comments', ['list']),
   },
   mounted() {
-    this.get();
+    this.$store.dispatch('Comments/get');
   },
 };
 </script>

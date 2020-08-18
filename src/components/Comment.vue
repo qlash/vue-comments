@@ -25,10 +25,19 @@ export default {
       return `${this.comment.first_name} ${this.comment.last_name}`;
     },
   },
+  data: () => ({
+    interval: null,
+  }),
   filters: {
     fromNow(date) {
       return moment(date).fromNow();
     },
+  },
+  created() {
+    this.interval = setInterval(() => this.$forceUpdate(), 1000);
+  },
+  destroyed() {
+    clearInterval(this.interval);
   },
 };
 </script>

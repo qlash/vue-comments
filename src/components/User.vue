@@ -1,26 +1,26 @@
 <template>
   <section class="current-user">
-    <img
-      class="current-user__avatar"
-      :src="user.avatar"
-    />
-    <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+    <template v-if="current">
+      <img
+        class="current-user__avatar"
+        :src="current.avatar"
+      />
+      <strong>{{ current.first_name }} {{ current.last_name }}</strong>
+    </template>
+    <Loader v-else />
   </section>
 </template>
 
 <script>
-export default {
-  data: () => ({
-    user: {},
-  }),
-  async beforeMount() {
-    const res = await fetch('https://my-json-server.typicode.com/zaszczyk/demo/users');
-    const users = await res.json();
-    const randomUser = users[Math.floor(Math.random() * users.length)];
-    localStorage.setItem('user-list', JSON.stringify(users));
-    localStorage.setItem('user', JSON.stringify(randomUser));
+import { mapState } from 'vuex';
 
-    this.user = randomUser;
+export default {
+  computed: {
+    ...mapState('Users', ['current']),
+  },
+  async beforeMount() {
+    await this.$store.dispatch('Users/getList');
+    this.$store.commit('Users/setCurrent');
   },
 };
 </script>
